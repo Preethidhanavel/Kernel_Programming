@@ -1,15 +1,31 @@
 #include<stdio.h>
-int x=7;
+
+// Define a global variable 'x' with value 7
+int x = 7;
+
+// Create another global variable 'y' as an alias to 'x'
 extern int y __attribute__((alias("x")));
-static int func(int a,int b)
+
+// Define a static function 'func' that adds two numbers
+static int func(int a, int b)
 {
-	printf("The result is %d\n",a+b);
-	return a+b;
+    printf("The result is %d\n", a + b);
+    return a + b;
 }
-static int add(int a,int b) __attribute__((alias("func")));
+
+// Create another function 'add' as an alias for 'func'
+static int add(int a, int b) __attribute__((alias("func")));
+
 int main()
 {
-	add(3,6);
-	func(5,10);
-printf("%d\n",y);
+    // Calling 'add' which internally uses 'func'
+    add(3, 6);
+
+    // Direct call to 'func'
+    func(5, 10);
+
+    // Print value of 'y' (which is alias of 'x' -> 7)
+    printf("%d\n", y);
+
+    return 0;
 }
