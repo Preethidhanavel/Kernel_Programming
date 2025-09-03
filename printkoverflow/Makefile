@@ -1,5 +1,5 @@
 # Specify the kernel module(s) to build
-obj-m += uts_release.o     # Add 'uts_release.o' as a module to be compiled
+obj-m += printk_overflow.o    # Add 'printk_overflow.o' as a module to be compiled
 
 # Default target to build the module
 all:

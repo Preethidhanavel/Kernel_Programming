@@ -1,20 +1,26 @@
-#include <linux/kernel.h>
-#include <linux/module.h>
+#include <linux/kernel.h>   // Needed for KERN_INFO and other kernel macros
+#include <linux/module.h>   // Needed for all kernel modules
 
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL");      // Declare the license type 
 
+// Module initialization function
 static int __init test_init(void)
 {
-            printk(KERN_INFO KERN_CONT"%s EMBEDDED",__func__);
-	    printk(KERN_INFO KERN_CONT"SYSTEM\n");
-    return 0;
+    // Print "test_init EMBEDDED" without a newline
+    printk(KERN_INFO KERN_CONT "%s EMBEDDED", __func__);
+    
+    // Print "SYSTEM" with a newline
+    printk(KERN_INFO KERN_CONT "SYSTEM\n");
+    
+    return 0;  // Return 0 indicates successful initialization
 }
 
+// Module cleanup function
 static void __exit test_exit(void)
 {
-    printk(KERN_INFO "Exiting module\n");
+    printk(KERN_INFO "Exiting module\n");  // Print message when module is removed
 }
 
+// Macros to register init and exit functions
 module_init(test_init);
 module_exit(test_exit);
-

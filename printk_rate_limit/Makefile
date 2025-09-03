@@ -1,5 +1,5 @@
 # Specify the kernel module(s) to build
-obj-m += uts_release.o     # Add 'uts_release.o' as a module to be compiled
+obj-m += rate_limit_sleep.o    # Add 'rate_limit_sleep.o' as a module to be compiled
 
 # Default target to build the module
 all:
