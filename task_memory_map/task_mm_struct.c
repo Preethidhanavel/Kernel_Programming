@@ -1,12 +1,7 @@
 #include <linux/kernel.h>        // Needed for printk and kernel macros
 #include <linux/module.h>        // Needed for all kernel modules
 #include <linux/moduleparam.h>   // Needed for module parameters
-#include <linux/list.h>          // Needed for linked list operations
 #include <linux/mm.h>            // Needed for mm_struct, vm_area_struct
-#include <linux/mm_types.h>      // Additional memory type definitions
-#include <linux/proc_fs.h>       // For proc filesystem access 
-#include <linux/version.h>       // Kernel version macros
-#include <linux/sched.h>         // Needed for task_struct
 #include <linux/sched/signal.h>  // Needed for for_each_process
 
 // Function prototypes
