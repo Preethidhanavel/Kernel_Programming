@@ -1,4 +1,4 @@
-   1.  sudo apt-get update
+   1.  sudo apt update
    2.  sudo apt install build-essential libncurses-dev bison flex libssl-dev libelf-dev bc
    3.  ls
    4.  tar xvf linux-6.16.5.tar.xz 
