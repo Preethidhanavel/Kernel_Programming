@@ -130,7 +130,7 @@ static int btn_probe(struct platform_device *pdev)
     atomic_set(&press_count, 0);  // Initialize counter
 
     // Create class and device for sysfs
-    gpiobtn_class = class_create(THIS_MODULE, "gpiobtn");
+    gpiobtn_class = class_create("gpiobtn");
     if (IS_ERR(gpiobtn_class)) {
         ret = PTR_ERR(gpiobtn_class);
         goto err_irq;
@@ -170,7 +170,7 @@ err_btn:
 /* ---------- REMOVE FUNCTION ----------
  * Cleans up resources when the driver is removed.
  */
-static int btn_remove(struct platform_device *pdev)
+static void btn_remove(struct platform_device *pdev)
 {
     device_remove_file(gpiobtn_dev, &dev_attr_press_count);
     device_remove_file(gpiobtn_dev, &dev_attr_toggle_led);
@@ -184,7 +184,7 @@ static int btn_remove(struct platform_device *pdev)
 
     pr_info("[gpiobtn] Driver removed. Final press_count = %d\n",
             atomic_read(&press_count));
-    return 0;
+    return;
 }
 
 /* -------- Device Tree Match Table -------- */
