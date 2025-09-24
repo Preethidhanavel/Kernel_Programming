@@ -13,13 +13,11 @@
 
 uint32_t read_count = 0;                 // Counter for number of reads
 static struct task_struct *wait_thread;  // Kernel thread pointer
-
-DECLARE_COMPLETION(data_read_done);      // Completion object
-
+struct completion data_read_done;        // Completion object
 dev_t dev = 0;                           // Device number (major+minor)
 static struct class *dev_class;          // Device class pointer
 static struct cdev dev_cdev;             // Char device structure
-int completion_flag = 0;                 // Flag to identify event source
+int completion_flag = 0;                 // To identify event source
 
 // Kernel thread function to wait for completion events
 static int wait_function(void *unused)
@@ -30,17 +28,16 @@ static int wait_function(void *unused)
                 // Wait until completion is triggered
                 wait_for_completion(&data_read_done);
 
-                // If exit flag is set, terminate thread
                 if(completion_flag == 2) {
                         pr_info("Event Came From Exit Function\n");
-                        return 0;
+                        return 0;   // Exit thread
                 }
 
-                // Event triggered by read() function
+                // Event came from read()
                 pr_info("Event Came From Read Function - %d\n", ++read_count);
                 completion_flag = 0;   // Reset flag
         }
-        do_exit(0);
+        do_exit(0);  // Not really reached, safe exit
         return 0;
 }
 
@@ -58,20 +55,20 @@ static int dev_release(struct inode *inode, struct file *file)
         return 0;
 }
 
-// File read callback
+// Read callback
 static ssize_t dev_read(struct file *filp, char __user *buf, size_t len, loff_t *off)
 {
         pr_info("Read Function\n");
         completion_flag = 1;  // Mark event as triggered by read()
 
-        // Trigger completion if not already done
+        // Trigger completion only if not already completed
         if(!completion_done(&data_read_done)) {
             complete(&data_read_done);
         }
         return 0;
 }
 
-// File write callback
+// Write callback
 static ssize_t dev_write(struct file *filp, const char __user *buf, size_t len, loff_t *off)
 {
         pr_info("Write function\n");
@@ -88,17 +85,17 @@ static struct file_operations fops =
         .release        = dev_release,
 };
 
-// Module initialization
+// Module init function
 static int __init dev_driver_init(void)
 {
-        // Allocate major and minor numbers
+        // Allocate Major and Minor numbers
         if((alloc_chrdev_region(&dev, 0, 1, "dev_Dev")) <0){
                 pr_err("Cannot allocate major number\n");
                 return -1;
         }
         pr_info("Major = %d Minor = %d \n",MAJOR(dev), MINOR(dev));
 
-        // Initialize cdev structure and add to system
+        // Initialize and add cdev structure
         cdev_init(&dev_cdev,&fops);
         dev_cdev.owner = THIS_MODULE;
         dev_cdev.ops = &fops;
@@ -108,7 +105,7 @@ static int __init dev_driver_init(void)
             goto r_class;
         }
 
-        // Create device class
+        // Create class
         if(IS_ERR(dev_class = class_create(THIS_MODULE,"dev_class"))){
             pr_err("Cannot create the struct class\n");
             goto r_class;
@@ -120,13 +117,17 @@ static int __init dev_driver_init(void)
             goto r_device;
         }
 
-        // Create and start kernel thread
+        // Create and run kernel thread
         wait_thread = kthread_create(wait_function, NULL, "WaitThread");
         if (wait_thread) {
                 pr_info("Thread Created successfully\n");
                 wake_up_process(wait_thread);
-        } else
+        } else {
                 pr_err("Thread creation failed\n");
+        }
+
+        // Initialize completion object
+        init_completion(&data_read_done);
 
         pr_info("Device Driver Insert...Done!!!\n");
         return 0;
@@ -138,17 +139,21 @@ r_class:
         return -1;
 }
 
-// Module exit / cleanup
+// Module exit function
 static void __exit dev_driver_exit(void)
 {
-        completion_flag = 2;  // Signal thread to exit
+        // Notify thread to exit by setting flag=2
+        completion_flag = 2;
         if(!completion_done(&data_read_done)) {
             complete(&data_read_done);
         }
-        device_destroy(dev_class,dev);  // Remove device node
-        class_destroy(dev_class);       // Destroy device class
-        cdev_del(&dev_cdev);            // Delete cdev
-        unregister_chrdev_region(dev, 1); // Release major/minor numbers
+
+        // Cleanup resources
+        device_destroy(dev_class,dev);
+        class_destroy(dev_class);
+        cdev_del(&dev_cdev);
+        unregister_chrdev_region(dev, 1);
+
         pr_info("Device Driver Remove...Done!!!\n");
 }
 
@@ -157,4 +162,4 @@ module_exit(dev_driver_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("PREETHI");
-MODULE_DESCRIPTION("device driver - completion");
+MODULE_DESCRIPTION("Device driver - Completion - Dynamic Method");
