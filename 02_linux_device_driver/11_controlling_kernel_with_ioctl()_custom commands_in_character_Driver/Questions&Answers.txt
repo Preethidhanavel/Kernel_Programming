@@ -1,0 +1,89 @@
+1. What does ioctl() allow that read() and write() do not?
+
+The ioctl() function allows device-specific control operations that cannot be handled by read() or write().
+
+The read() and write() functions are only used for transferring data between user space and the device.
+
+ioctl() is used to configure, control, or query device settings.
+
+Example:
+
+read() reads data from the device
+
+write() writes data to the device
+
+ioctl() sets baud rate, changes mode, resets device, etc.
+
+
+
+
+2. Why do we need copy_to_user() or copy_from_user()?
+
+User space and kernel space are two separate memory regions for safety and protection.
+
+The kernel cannot directly access pointers from user space.
+
+Therefore, special functions are needed to safely copy data between user space and kernel space.
+
+copy_from_user() copies data from user space to kernel space.
+
+copy_to_user() copies data from kernel space to user space.
+
+These functions also handle memory access violations and page faults safely.
+
+
+
+
+
+3. What does _IO vs _IOR mean?
+
+These are macros used to define ioctl command numbers.
+
+They indicate the direction of data transfer between the user and the kernel.
+
+_IO means no data transfer (simple command).
+
+_IOR means data is copied from kernel to user (read).
+
+_IOW means data is copied from user to kernel (write).
+
+_IOWR means data is transferred in both directions (read and write).
+
+
+
+
+
+4. What happens if the user passes an invalid cmd?
+
+If the command (cmd) passed by the user is not recognized by the driver, the ioctl function should return -ENOTTY.
+
+-ENOTTY stands for “Inappropriate ioctl for device”.
+
+This return value tells the system that the command is invalid.
+
+The kernel does not crash, it simply reports the error and ignores the command.
+
+Example code:
+
+switch (cmd) {
+    case MY_IOCTL_CMD:
+        // handle command
+        break;
+    default:
+        return -ENOTTY;
+}
+
+
+
+
+
+
+5. Why is thread-safety still important in ioctl()?
+
+Multiple threads or processes can call ioctl() on the same device at the same time.
+
+If shared variables or hardware registers are accessed without synchronization, race conditions may occur.
+
+Race conditions can cause data corruption or unpredictable behavior.
+
+To avoid this, synchronization mechanisms like mutexes, spinlocks, or atomic variables should be used in the ioctl() implementation.

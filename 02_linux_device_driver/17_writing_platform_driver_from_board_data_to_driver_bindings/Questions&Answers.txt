@@ -1,0 +1,61 @@
+1. What triggers the call to probe() in a platform driver ?
+
+The probe() function is called when a matching platform device is found for a registered platform driver.
+
+The kernel matches the device and driver based on the name field in their structures.
+
+Once a match occurs, the kernel calls the driver’s probe() function to initialize the device.
+
+It typically happens during system boot or when the driver is loaded using insmod/modprobe.
+
+
+
+
+
+2. Can you have multiple platform devices with the same name ?
+
+No, multiple platform devices cannot have the exact same name.
+
+The kernel uses the device name as a unique identifier during driver-device matching.
+
+If two devices have the same name, only the first will bind correctly, and others may be ignored or cause conflicts.
+
+Each platform device should have a unique name or use an index suffix (for example, "led0", "led1").
+
+
+
+
+
+3. What does platform_driver_unregister() do ?
+
+It removes a previously registered platform driver from the kernel.
+
+It reverses the action of platform_driver_register().
+
+The function ensures all devices currently bound to that driver are unbound, and their remove() callbacks are called.
+
+It is usually used in the module’s exit function to clean up resources.
+
+
+
+
+
+4. What is the significance of .id = -1 in a platform device ?
+
+Setting .id = -1 indicates that the device does not belong to a numbered series of devices.
+
+It tells the kernel to treat the device as a single instance without appending any numeric suffix to its name.
+
+For example, a device named “led” with .id = -1 will appear as “led”, not “led.0”.
+
+
+
+
+
+5. Where is pdev->name compared during matching ?
+
+The kernel compares pdev->name (from the platform_device structure) with the driver’s driver.name or id_table entries.
+
+This comparison happens inside the function platform_match(), defined in drivers/base/platform.c.
+
+If the names match, the kernel considers the device and driver compatible and calls the driver’s probe() function.

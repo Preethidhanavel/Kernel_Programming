@@ -1,0 +1,65 @@
+1. Where does /proc exist on a Linux system ?
+
+/proc is a virtual filesystem that exists in memory, not on disk.
+
+It is mounted at the path /proc during system boot.
+
+It provides an interface to kernel data structures and process information in a file-like format.
+
+The contents are generated dynamically by the kernel whenever they are read.
+
+
+
+
+
+2. What’s the role of seq_file in procfs ?
+
+The seq_file interface is used to simplify reading large or sequential data from procfs entries.
+
+It helps avoid manual buffer handling and partial reads.
+
+It provides helper functions like single_open(), seq_printf(), and seq_read() for cleaner implementation.
+
+It is especially useful when the proc entry needs to display information line by line or iteratively.
+
+
+
+
+
+3. Can /proc/gpiobtn_info be used to write data ?
+
+By default, proc entries are read-only.
+
+To allow writing, a write callback must be registered when creating the proc entry.
+
+If a write handler is implemented, user space can write to /proc/gpiobtn_info using commands like echo "data" > /proc/gpiobtn_info.
+
+If no write handler exists, attempts to write will result in an error.
+
+
+
+
+
+4. Why might you prefer procfs over printk logs ?
+
+Procfs provides a persistent interface that can be read at any time without relying on kernel log buffers.
+
+It allows structured output, making it easier to parse and analyze.
+
+Unlike printk logs, the information can be fetched on demand instead of scrolling through dmesg.
+
+It reduces kernel log clutter and provides better separation between debug info and runtime status.
+
+
+
+
+
+5. What happens if proc_remove() is skipped ?
+
+The proc entry remains in the /proc filesystem even after the module is removed.
+
+Accessing it after the module is unloaded can lead to dangling pointers and kernel crashes.
+
+It causes a resource leak, as the proc entry is never cleaned up.
+
+Always calling proc_remove() during module exit ensures safe cleanup of procfs entries.

@@ -1,0 +1,61 @@
+1. Why must you not sleep in an ISR?
+
+An ISR (Interrupt Service Routine) runs in interrupt context.
+
+Sleeping means giving up the CPU and waiting, which is not allowed in interrupt context.
+
+Interrupts are meant to be fast and finish quickly.
+
+Sleeping inside an ISR can cause the system to hang or crash.
+
+
+
+
+
+2. What happens if you call msleep() in an IRQ handler?
+
+Calling msleep() in an IRQ handler will cause a kernel warning or crash.
+
+The kernel will print a “sleeping function called from invalid context” warning.
+
+The system may become unstable because interrupt handlers cannot sleep.
+
+
+
+
+
+3. What is the benefit of a workqueue over tasklets?
+
+Workqueues run in process context, so they can sleep or block if needed.
+
+Tasklets run in softirq context, so they cannot sleep.
+
+Workqueues are better when the deferred work needs to access functions that may sleep.
+
+Workqueues provide more flexibility compared to tasklets.
+
+
+
+
+
+4. What does cancel_work_sync() ensure?
+
+It cancels a pending work item from the workqueue.
+
+It waits until the work has finished if it is currently running.
+
+It ensures that the work will not run again after the function returns.
+
+It is used to safely stop work during module removal or cleanup.
+
+
+
+
+
+5. Can you call gpiod_get_value() inside a workqueue?
+
+Yes, you can call gpiod_get_value() inside a workqueue.
+
+Workqueues run in process context, so it is safe to call functions that may sleep.
+
+This makes workqueues suitable for handling GPIO operations after interrupts.

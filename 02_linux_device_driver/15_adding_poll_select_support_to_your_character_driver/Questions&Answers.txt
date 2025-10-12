@@ -1,0 +1,57 @@
+1.What is the purpose of poll_wait() in the driver?
+
+Registers the calling process with the device’s wait queue.
+
+Allows the process to sleep until a condition (like data availability) changes.
+
+Ensures efficient CPU usage instead of busy-waiting.
+
+
+
+
+
+
+2.What does the poll() system call do in user space?
+
+
+Monitors multiple file descriptors for read/write readiness.
+
+Blocks until one becomes ready or a timeout occurs.
+
+Returns events like POLLIN or POLLOUT to indicate which are ready.
+
+
+
+
+
+3.What happens if your driver’s .poll returns 0?
+
+It means no events (like data available) are ready yet.
+
+The calling process continues waiting until a condition changes or timeout.
+
+No file descriptors are reported as ready.
+
+
+
+
+
+4.How does poll() differ from blocking read()?
+
+poll() checks readiness without actually performing I/O.
+
+read() blocks until data is available and then transfers it.
+
+poll() can monitor multiple devices at once; read() handles one.
+
+
+
+
+
+5.Why is POLLIN used in the return mask?
+
+It signals that data is available for reading.
+
+Tells user-space poll() that a read() won’t block.
+
+It’s part of the standard poll event flags defined in Linux.

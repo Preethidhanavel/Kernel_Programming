@@ -1,0 +1,82 @@
+1.What is the /proc filesystem?
+
+/proc is a virtual filesystem that provides an interface to kernel data structures.
+
+It doesn’t store files on disk instead, files are generated dynamically to give information about processes, kernel parameters, and system state
+
+
+
+
+
+2.What is the purpose of seq_printf()?
+
+seq_printf() is a helper function used in the seq_file API.
+
+It allows kernel code to print formatted output into a /proc file in a safe and efficient way.
+
+
+
+
+
+3.Why do we need proc_create()?
+
+proc_create() is used by kernel modules to create a new entry in /proc.
+
+It links a /proc filename (e.g., /proc/myinfo) with file operations (read/write callbacks) in the kernel module.
+
+Without it, the /proc entry doesn’t exist for user space to access.
+
+
+
+
+
+4.What happens if you forget remove_proc_entry()?
+
+If you forget to call remove_proc_entry(), your /proc entry will remain even after your module is removed.
+
+This leads to a dangling pointer, because the file will still be visible but its callbacks point to unloaded kernel code , which can cause a kernel crash (oops/panic).
+
+
+
+
+
+
+5.How does cat /proc/myinfo fetch data from the kernel?
+
+When you run cat /proc/myinfo:
+
+The kernel looks up the /proc/myinfo entry.
+
+The associated file operations (usually proc_read or seq_read) are triggered.
+
+The kernel module’s read function is executed, filling a buffer (often using seq_printf()).
+
+Data is copied from kernel space to user space, and cat displays it.
+
+
+
+
+
+6.What type of info does each file give you?
+
+cat /proc/uptime : Shows system uptime (in seconds) and idle time.
+
+cat /proc/version : Shows the kernel version, build time, and compiler info.
+
+cat /proc/modules : Lists all currently loaded kernel modules.
+
+cat /proc/meminfo : Displays detailed memory usage
+
+
+
+
+7.Which one shows all currently loaded modules? 
+
+/proc/modules shows all currently loaded modules
+
+
+
+
+8.Which one shows your kernel version?
+
+/proc/version shows your kernel version

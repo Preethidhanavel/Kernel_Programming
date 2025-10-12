@@ -1,0 +1,37 @@
+1. What is the purpose of cdev_add()?
+ It registers the character device with the kernel.
+ It links the cdev structure with the device number (major and minor).
+ It makes the device available in the /dev directory through udev.
+ Without cdev_add(), user space cannot access the driver.
+
+
+
+2. How does echo 1 > /dev/gpiobtn reach the driver?
+ The shell writes the string "1\n" to the device file.
+ The VFS layer translates this write to the driver’s file_operations.write() function.
+ The driver then processes the written data.
+ Essentially, echo acts as a frontend for the driver's write() function.
+
+
+
+3. Can multiple apps access /dev/gpiobtn concurrently?
+ Yes, multiple processes can open the same device file.
+ Each process will have its own file descriptor.
+ The driver must handle concurrency properly to avoid race conditions.
+ Synchronization mechanisms like mutex or spinlock can be used if needed.
+
+
+
+4. What happens if read() is called without a newline?
+ The read() call will still return whatever data is available.
+ If the driver expects a newline to terminate input, it may not behave as intended.
+ Some user-space tools may block or behave unexpectedly if the expected format is not followed.
+ Proper handling in the driver can prevent such issues.
+
+
+
+5. When should you prefer ioctl() over write()?
+ When the operation is not just plain data transfer.
+ For control commands like configuring settings or mode changes.
+ ioctl() allows passing structured commands and arguments.
+ It makes the interface cleaner for control operations compared to overloading write().

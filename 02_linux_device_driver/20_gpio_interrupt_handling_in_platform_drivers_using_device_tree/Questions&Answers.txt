@@ -1,0 +1,59 @@
+1.Why is request_irq() preferred over polling?
+
+Polling keeps checking the GPIO in a loop, wasting CPU time.
+
+request_irq() uses interrupts, so the CPU only reacts when an event occurs.
+
+It’s faster, more power-efficient, and ideal for real-time response.
+
+Improves system performance and reduces unnecessary workload.
+
+
+
+
+
+2.What does IRQF_TRIGGER_FALLING do?
+
+It triggers the interrupt when the signal transitions from HIGH → LOW.
+
+Commonly used for active-low buttons that pull the line low when pressed.
+
+Ensures the IRQ fires exactly at the falling edge of the signal.
+
+
+
+
+
+
+3.What is the return type of an IRQ handler?
+
+The return type is irqreturn_t.
+
+The handler returns IRQ_HANDLED when it processes the interrupt.
+
+Returns IRQ_NONE if the interrupt wasn’t meant for this driver.
+
+Helps the kernel know if the interrupt was correctly handled.
+
+
+
+
+
+4.What happens if you don't call free_irq() in remove()?
+
+The interrupt line remains allocated to your driver.
+
+Causes memory leaks or conflicts when reloading the driver.
+
+May lead to crashes or kernel warnings.
+
+
+
+
+
+5.Can you sleep in an IRQ handler?
+
+No, sleeping is not allowed in interrupt context.
+
+IRQ handlers must execute quickly and cannot block.
+

@@ -1,0 +1,60 @@
+1. What is a kernel module?
+
+A kernel module is a piece of code that can be loaded into or removed from the Linux kernel at runtime.
+
+Example: device drivers, filesystem support, etc.
+
+
+2. Why do we use printk() instead of printf()?
+
+printf() is for user-space programs, not the kernel.
+
+printk() is the kernel’s logging function, safe to use inside the kernel.
+
+It prints messages to the kernel log (viewable with dmesg).
+
+
+3. What does insmod do?
+
+insmod inserts a kernel module into the running kernel.
+
+Example: sudo insmod mymodule.ko
+
+
+4. What is the purpose of module_init() and module_exit()?
+
+module_init() - specifies the function to run when the module is loaded.
+
+module_exit() - specifies the function to run when the module is removed.
+
+
+5. Why should kernel modules be tested in VMs?
+
+Mistakes in kernel code can crash your whole system.
+
+In a VM, crashes only affect the virtual machine, so it’s safe to experiment.
+
+
+6. Try loading the module twice — what happens?
+
+If you try to load the same module twice, the kernel will prevent it and show an error like:
+
+insmod: ERROR: could not insert module mymodule.ko: File exists
+
+
+7. Remove it and try removing it again — what does the kernel say?
+
+If you try to remove a module twice:
+
+First rmmod - removes the module successfully.
+
+Second rmmod - kernel shows an error like:
+
+rmmod: ERROR: Module mymodule is not loaded
+
+
+8. Delete MODULE_LICENSE("GPL") and reload — what warning do you get in dmesg?
+
+If MODULE_LICENSE("GPL") is removed, loading the module taints the kernel, and dmesg shows:
+
+module license 'Proprietary' taints kernel

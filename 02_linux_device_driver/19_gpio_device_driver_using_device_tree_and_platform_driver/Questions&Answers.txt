@@ -1,0 +1,56 @@
+1.What does GPIOD_OUT_LOW do?
+
+It tells the kernel to configure the GPIO as an output pin.
+
+It initializes the pin to a low state (0 volts, OFF) when acquired.
+
+Used in gpiod_get(dev, NULL, GPIOD_OUT_LOW) to safely get the GPIO for output
+
+
+
+
+
+2.Why must you call gpiod_put() in remove()?
+
+Releases the GPIO descriptor and frees resources.
+
+Prevents resource leaks or conflicts if another driver tries to use the GPIO later
+
+Makes it safe to unload the driver.
+
+
+
+
+
+3.What happens if the GPIO pin is not defined in the DT?
+
+gpiod_get() will fail and return an error pointer.
+
+The probe() function will detect this (IS_ERR()) and return an error.
+
+The driver will not bind, and the LED cannot be controlled
+
+
+
+
+
+4.How can you toggle an LED from the driver at runtime?
+
+Use gpiod_set_value() to set the GPIO high or low:
+
+gpiod_set_value(led_gpiod, 1); // ON
+gpiod_set_value(led_gpiod, 0); // OFF
+
+
+
+
+
+5.What does gpio-desc mean?
+
+It’s a kernel object representing a GPIO pin.
+
+Abstracts the pin so drivers don’t need to know the physical number or bank.
+
+Allows uniform GPIO access via gpiod_get(), gpiod_set_value(), gpiod_get_value(), etc.
+
+Safer and more portable than using raw GPIO numbers

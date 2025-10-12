@@ -1,0 +1,58 @@
+1.What is the role of the compatible string?
+
+Acts as a link between a Device Tree node and its driver.
+
+Kernel uses it to match DT nodes to drivers via of_match_table.
+
+Ensures the correct driver is loaded for a specific hardware device.
+
+
+
+
+
+
+2.What happens if status = "disabled" in the DT?
+
+Kernel ignores the DT node.
+
+No platform device is created for that node.
+
+Driver’s probe() function is not called.
+
+
+
+
+
+
+3.How does the kernel associate the DT node to a platform device?
+
+Kernel reads the DT at boot and finds nodes with status = "okay".
+
+Creates a platform device for each active node.
+
+Matches the device to a driver using the compatible string.
+
+
+
+
+
+
+4.Can one driver match multiple compatible strings?
+
+Yes, a driver can list multiple entries in its of_device_id table.
+
+Allows support for different versions or variants of a device.
+
+Kernel matches any of the listed strings to the driver.
+
+
+
+
+
+5.What does of_property_read_u32() do?
+
+Reads a 32-bit integer property from a DT node.
+
+Copies the value into a C variable.
+
+Returns an error if the property does not exist.

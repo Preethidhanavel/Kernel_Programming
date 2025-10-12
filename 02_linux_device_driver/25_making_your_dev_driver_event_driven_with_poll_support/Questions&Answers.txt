@@ -1,0 +1,37 @@
+1. What triggers a poll notification in your driver?
+ A poll notification is triggered when the driver's internal event occurs (e.g., data becomes available or a condition changes).
+ Typically, functions like wake_up_interruptible() are called to notify waiting processes.
+ This wakes up processes blocked in poll(), select(), or epoll().
+ Common triggers include interrupts, hardware events, or new data in buffers.
+
+
+
+2. Why is poll_wait() needed inside .poll()?
+ poll_wait() registers the calling process with the driver’s wait queue.
+ It ensures the process sleeps until an event occurs, avoiding busy waiting.
+ When the event happens, wake_up_interruptible() wakes the process.
+ Without poll_wait(), the process won’t be properly notified and may spin continuously.
+
+
+
+3. What if you forget to clear data_ready after read?
+ The poll() call will keep returning as if data is still available.
+ This can cause repeated wakeups and high CPU usage.
+ Applications may read the same data multiple times unnecessarily.
+ Properly resetting data_ready ensures correct event handling.
+
+
+
+4. What’s the difference between poll() and select()?
+ Both are used to monitor multiple file descriptors for I/O readiness.
+ select() uses fixed-size bitmasks, making it less scalable.
+ poll() uses a variable-length array, better for handling many descriptors.
+ poll() provides more detailed event reporting.
+
+
+
+5. Can poll() wait on multiple devices?
+ Yes, poll() can monitor multiple file descriptors at once.
+ The user-space application provides a list of fds and events.
+ The kernel waits until any of them becomes ready.
+ This allows efficient I/O multiplexing.

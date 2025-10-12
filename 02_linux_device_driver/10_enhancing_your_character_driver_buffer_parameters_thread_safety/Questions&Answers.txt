@@ -1,0 +1,59 @@
+1.What is the purpose of using a ring buffer?
+
+A ring buffer is a circular buffer for storing messages.
+
+When you write a new message and reach the end, it wraps back to the start.
+
+This way, you can store multiple messages in order without moving data around.
+
+
+
+
+
+
+2.How does a mutex protect shared resources?
+
+A mutex is like a lock on a shared resource.
+
+If one process is writing or reading, others have to wait until it’s done.
+
+This prevents data from getting mixed up or corrupted when multiple programs use the device at the same time.
+
+
+
+
+
+
+3.Why use module_param() instead of hardcoding?
+
+Lets you configure the driver when you load it instead of changing the code.
+
+Ex: you can set the device name or how many messages the buffer can hold.
+
+This makes the driver flexible and reusable for different setups.
+
+
+
+
+
+
+4.What happens when buffer is full?
+
+If all slots in the buffer are filled, new messages cannot be stored.
+
+The driver will reject the new message and report an error.
+
+This protects memory from overflowing or getting corrupted.
+
+
+
+
+
+
+5.How do read_index and write_index help?
+
+write_index shows where the next message will go.
+
+read_index shows which message should be read next.
+
+Together, they make sure messages are read in the same order they were written (FIFO).

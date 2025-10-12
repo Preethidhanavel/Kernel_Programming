@@ -1,0 +1,73 @@
+1. What is EXPORT_SYMBOL() used for
+
+EXPORT_SYMBOL() is used to make a function or variable available to other kernel modules.
+
+It allows one module to use symbols (like functions or variables) defined in another module.
+
+Without exporting, the symbol remains private to that module and cannot be linked by others.
+
+Example:
+
+int add(int a, int b) 
+{ 
+	return a + b; 
+}
+EXPORT_SYMBOL(add);
+
+
+
+
+
+2. Why does loading order matter
+
+When one module depends on another’s exported symbols, the provider module must be loaded first.
+
+If the dependent module is loaded before the provider, the kernel cannot resolve the symbol addresses.
+
+This causes an unresolved symbol error during insmod or modprobe.
+
+Correct loading order ensures all required symbols are already available in the kernel symbol table.
+
+
+
+
+
+3. What happens if a module uses a symbol before it’s exported
+
+The kernel will report an error such as unresolved symbol when loading the dependent module.
+
+The module loading will fail because the kernel cannot find the address of the referenced symbol.
+
+The dependent module will not be inserted into the kernel until the symbol provider is loaded and its symbols are exported.
+
+
+
+
+
+4. How is device_driver.ko logically dependent on core_driver.ko
+
+core_driver.ko provides common functions or data that device_driver.ko needs to operate.
+
+device_driver.ko calls functions or accesses variables that are exported by core_driver.ko.
+
+Hence, core_driver.ko must be loaded first to make its exported symbols available.
+
+This creates a logical dependency where device_driver.ko relies on the symbols of core_driver.ko.
+
+
+
+
+
+5. Can you export data structures too
+
+Yes, data structures (like global structs or arrays) can also be exported.
+
+You can export both functions and global variables using EXPORT_SYMBOL().
+
+Example:
+
+struct device_info dev = { .id = 1 };
+EXPORT_SYMBOL(dev);
+
+
+Other modules can then use this structure by declaring it as an external variable.

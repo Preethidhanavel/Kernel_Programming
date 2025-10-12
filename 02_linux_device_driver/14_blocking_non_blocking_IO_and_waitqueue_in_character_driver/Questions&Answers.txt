@@ -1,0 +1,68 @@
+1. Difference between Blocking and Non-Blocking I/O
+
+In blocking I/O, the process is put to sleep until the requested operation (like read or write) can be performed.
+
+The process does not continue execution until the I/O operation completes.
+
+In non-blocking I/O, the operation returns immediately even if it cannot be completed.
+
+The function call typically returns -EAGAIN or -EWOULDBLOCK to indicate that the operation would block.
+
+Blocking I/O is simpler but can cause delays, while non-blocking I/O improves responsiveness in multitasking systems.
+
+
+
+
+
+2. What happens if wait_event_interruptible() is used without a condition
+
+The function will put the process to sleep unconditionally.
+
+Since there is no condition to wake up, the process may sleep forever if not explicitly woken up.
+
+This leads to a deadlock or hang situation.
+
+Hence, it is mandatory to always use a proper condition with wait_event_interruptible().
+
+
+
+
+
+3. Why we need mutex along with wait queues
+
+Wait queues are used to put processes to sleep and wake them up when a condition becomes true.
+
+However, while checking or updating the condition, race conditions may occur between threads.
+
+A mutex ensures mutual exclusion, protecting shared data when processes enter or leave the wait state.
+
+Without a mutex, there can be inconsistent state or missed wakeups.
+
+
+
+
+
+4. What happens if multiple readers are waiting
+
+All readers waiting on the same wait queue will sleep until the condition becomes true.
+
+When the condition is satisfied and wake_up() or wake_up_interruptible() is called,
+all waiting readers may be woken up depending on the function used.
+
+Each reader will then recheck the condition before proceeding.
+
+Only the readers for whom the condition remains true will continue; others may go back to sleep.
+
+
+
+
+
+5. How user space sets O_NONBLOCK
+
+The O_NONBLOCK flag can be set using the fcntl() system call in user space.
+
+This modifies the file descriptor so that subsequent I/O calls like read() or write() become non-blocking.
+
+Alternatively, it can be set when opening the file using:
+
+open("device", O_RDWR | O_NONBLOCK);

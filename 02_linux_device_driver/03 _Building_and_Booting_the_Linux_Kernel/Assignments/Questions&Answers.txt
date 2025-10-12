@@ -1,0 +1,67 @@
+1. Answer the following based on your current Linux system:
+
+1. What is your current kernel version?
+(Use uname -r)
+
+6.8.0-84-generic
+
+
+2. What files are present in /boot/ that relate to the kernel?
+
+In /boot/, the kernel-related files are:
+
+vmlinuz-* - the actual Linux kernel
+
+initrd.img-* - temporary root filesystem with drivers
+
+config-* - kernel build configuration
+
+System.map-* - kernel symbol table
+
+
+
+3. What folder(s) exist in /usr/src/? Can you see linux-source or linux-headers?
+
+In /usr/src/ :
+
+linux-headers-* - kernel header files
+
+linux-source-* - full kernel source
+
+
+
+4. What is the role of GRUB during boot?
+
+GRUB (GRand Unified Bootloader) loads the kernel into memory and starts the boot process.
+
+Lets you choose between multiple kernels or OSes.
+
+
+
+5. What is vmlinuz?
+
+vmlinuz is the compressed Linux kernel image that GRUB loads to start the OS.
+
+
+6. Why is initramfs used?
+
+initramfs (initial RAM filesystem) provides temporary drivers and tools needed to mount the real root filesystem during boot.
+
+
+7. Why should you keep old kernels installed?
+
+In case the new kernel fails to boot, you can select an older working kernel from GRUB.
+
+
+8. What does make menuconfig do?
+
+Opens a menu-based configuration tool to select kernel options before building it.
+
+Lets you enable/disable drivers, features, and modules.
+
+
+9. Pick one module, and search online to find out what it does?
+
+joydev, lets your Linux system talk to joysticks and game controllers.
+
+

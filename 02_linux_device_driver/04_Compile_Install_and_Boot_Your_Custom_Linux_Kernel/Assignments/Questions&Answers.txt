@@ -1,0 +1,101 @@
+1. Write down what these commands do:
+
+make menuconfig :
+
+Opens a text-based menu to configure kernel options. 
+
+You can enable, disable, or modularize features. 
+
+Saves choices into a .config file used for building.
+
+
+make -j$(nproc) :
+
+Compiles the kernel using all available CPU cores ($(nproc) = number of cores). 
+
+The -j speeds up the build by parallelizing jobs. 
+
+This builds the kernel image and modules.
+
+
+make modules_install :
+
+Installs all compiled kernel modules into /lib/modules/<kernel-version>/. 
+
+This makes them available for loading with modprobe or at boot.
+
+
+make install :
+
+Installs the kernel image, System.map, and config to /boot/. 
+
+It also updates bootloader entries (like GRUB) automatically.
+
+
+update-grub :
+
+Regenerates the GRUB bootloader configuration file (usually /boot/grub/grub.cfg).
+
+Ensures the new kernel appears as a boot option
+
+
+uname -r :
+
+Prints the version of the currently running kernel
+
+
+
+
+
+
+2. After booting: 
+
+
+
+a) What does uname -r show before your new kernel? 
+
+it shows the version of the currently installed distribution kernel 6.8.0-84-generic
+
+
+
+
+b) What does it show after?
+
+It shows 6.8.0-custom
+
+
+
+
+
+
+
+3. Open this file:
+
+less /boot/grub/grub.cfg
+
+
+
+
+a) How many kernels are listed under menuentry?
+
+2 kernels are listed under menuentry
+
+
+
+
+b) Which is the default?
+
+6.8.0-84-generic this is the default
+
+
+
+
+c) How can you manually choose which one to boot?
+
+Hold Shift (for BIOS) or Esc (for UEFI) while the computer starts.
+
+Use the arrow keys to move up or down and select the kernel you want.
+
+Press Enter to boot that kernel.
+
+

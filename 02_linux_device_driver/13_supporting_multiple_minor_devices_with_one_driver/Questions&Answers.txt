@@ -1,0 +1,79 @@
+1. What’s the difference between major and minor numbers?
+
+The major number identifies the driver associated with the device.
+
+The minor number identifies a specific device or instance that the driver controls.
+
+In simple terms, the major number tells the kernel which driver to use, while the minor number tells which device that driver should talk to.
+
+Example: Multiple devices using the same driver will share the same major number but have different minor numbers.
+
+Together, the major and minor numbers form a unique device identifier.
+
+
+
+
+
+
+2. Why do we use container_of() in open()?
+
+The container_of() macro is used to get the address of the parent structure from a pointer to one of its members.
+
+In device drivers, when we call open(), we usually receive a pointer to struct file which contains a pointer to struct cdev.
+
+Using container_of(), we can retrieve the pointer to our custom device structure that contains the cdev.
+
+This helps us access the device’s private data and resources from within the open() function.
+
+It ensures that each open call operates on the correct device instance.
+
+
+
+
+
+
+3. What happens if two devices share the same buffer[]?
+
+If two devices share the same buffer without synchronization, data corruption or race conditions can occur.
+
+Both devices could try to read or write the buffer at the same time, leading to unpredictable results.
+
+Each device should ideally have its own separate buffer to store and manage data independently.
+
+If a shared buffer must be used, proper locking mechanisms such as mutexes or spinlocks are required to ensure thread safety.
+
+Sharing buffers without protection breaks data isolation and can cause system instability.
+
+
+
+
+
+
+4. How does private_data help isolate devices?
+
+The private_data field in struct file is used to store a pointer to device-specific data.
+
+When a device file is opened, the driver can assign its own data structure to file->private_data.
+
+This allows each open device instance to maintain its own context or state information.
+
+Different devices or users can use the same driver code but still work with independent data.
+
+It prevents conflicts between multiple devices handled by the same driver.
+
+
+
+
+
+
+5. What is MKDEV() and why is it needed?
+
+MKDEV() is a macro that combines a major number and a minor number into a single dev_t value.
+
+This dev_t value uniquely represents a device inside the kernel.
+
+It is required when registering a device using functions like register_chrdev_region() or alloc_chrdev_region().
+
+The kernel uses MKDEV() to identify the exact device based on its major and minor numbers.
+
+Similarly, macros like MAJOR() and MINOR() can extract the major and minor parts from a dev_t value.

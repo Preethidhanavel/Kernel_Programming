@@ -1,0 +1,33 @@
+1.What is the purpose of module_param() in a kernel module?
+
+Allows you to pass parameters to a kernel module when loading it with insmod or modprobe.
+
+
+
+
+2.What does the third argument (like 0660) control?
+
+Sets file permissions for the parameter in sysfs.
+
+0660 means owner and group can read/write, others cannot.
+
+
+
+
+3.What’s the difference between int and charp as types?
+
+int is an integer parameter; charp is a string (character pointer) parameter.
+
+
+
+
+4.What folder shows live values of module parameters?
+
+/sys/module/<modulename>/parameters/ contains files for each module parameter
+
+
+
+5.Can you change the value of a parameter at runtime?
+
+Yes, we can change the value of a parameter at runtime.
+

@@ -1,0 +1,75 @@
+1. Why is alloc_chrdev_region() better than register_chrdev()?
+
+alloc_chrdev_region() is preferred because it automatically allocates a major number dynamically.
+
+register_chrdev() requires you to manually choose and specify a major number.
+
+Using alloc_chrdev_region() avoids conflicts with other devices that might already be using the same major number.
+
+It also provides a cleaner and more modern approach to register character devices.
+
+It is commonly used along with cdev_init() and cdev_add() to register a device properly in the kernel.
+
+
+
+
+
+2. What does class_create() actually do?
+
+class_create() creates a device class entry under /sys/class/.
+
+This class represents a group of devices of the same type (for example, all serial or LED devices).
+
+It helps the kernel and user-space tools like udev identify and manage related devices.
+
+The class created is later used when calling device_create() to associate a specific device with that class.
+
+In short, it provides a way to organize and expose devices to user space through /sys/class/<class_name>/.
+
+
+
+
+
+3. What role does udev play in device node creation?
+
+udev is a user-space daemon that automatically manages device nodes in the /dev directory.
+
+When a new device is created (for example, using device_create()), the kernel sends a uevent notification to user space.
+
+udev listens for this event and creates the appropriate device node (like /dev/mydevice) with the correct permissions and ownership.
+
+Without udev, the user would have to manually create the device node using the mknod command.
+
+Therefore, udev automates and simplifies device node management.
+
+
+
+
+
+4. What is cleaned by device_destroy()?
+
+device_destroy() removes the device entry that was previously created using device_create().
+
+It deletes the device from /sys/class/<class_name>/.
+
+It also removes the corresponding device node from /dev (through udev).
+
+This function ensures proper cleanup when unloading a driver or when a device is removed.
+
+It prevents stale entries from remaining in the system after the device is gone.
+
+
+
+
+
+5. What happens if device_create() fails?
+
+If device_create() fails, no device entry is created in /sys/class/ and no device node appears in /dev.
+
+The function returns an error pointer (usually NULL or ERR_PTR() with a negative error code).
+
+The driver should check the return value and handle the failure properly.
+
+In case of failure, the driver should clean up previously allocated resources such as cdev structures, memory, and possibly call class_destroy().
+
+Failure to handle this correctly can lead to memory leaks or inconsistent system state.

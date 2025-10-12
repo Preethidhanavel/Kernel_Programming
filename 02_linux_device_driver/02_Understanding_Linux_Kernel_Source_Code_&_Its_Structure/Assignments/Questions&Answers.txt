@@ -1,0 +1,50 @@
+Find a folder like linux-source-* or linux-headers-*. Explore and answer:
+
+1.What folders do you see inside?
+
+Inside /usr/src/linux-headers-5.15.0-156 there is folders 
+arch   certs   Documentation  fs       init      ipc     Kconfig  lib       mm   samples  security  tools   usr
+block  crypto  drivers        include  io_uring  Kbuild  kernel   Makefile  net  scripts  sound
+
+
+
+
+2.What folder likely contains USB driver code?
+
+USB driver code is in drivers/usb/
+
+
+
+3.What folder has memory management code?
+
+Memory management code is in mm/
+
+
+
+4.What is the purpose of a Makefile in the kernel?
+
+The Makefile tells the compiler how to turn your C files into a working kernel.it defines how the kernel and modules are compiled and linked and it organizes the build process across subsystems.
+
+
+
+5.What does Kconfig do?
+
+Provides configuration options for kernel features and dependencies, used by tools like make menuconfig.
+
+
+
+6.Why is the kernel source divided into many folders?
+
+The kernel is split into folders (drivers, mm, fs, etc.) to keep code modular and maintainable.
+
+
+
+7.Can we remove features from the kernel before building? How?
+
+Yes, you can remove features before building by configuring the kernel with make menuconfig.
+
+
+
+8.Why should we avoid modifying the top-level kernel Makefile directly?
+
+Direct edits may break the entire kernel build process. Instead, changes should be made in subsystem Makefiles or Kconfig files. This preserves stability and compatibility with the kernel build system.
