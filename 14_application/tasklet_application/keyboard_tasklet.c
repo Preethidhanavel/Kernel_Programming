@@ -7,7 +7,6 @@
 #include <linux/ktime.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Assistant");
 MODULE_DESCRIPTION("Keyboard double-press detector using tasklet");
 MODULE_VERSION("1.0");
 
