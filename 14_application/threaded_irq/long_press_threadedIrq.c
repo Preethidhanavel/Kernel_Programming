@@ -12,7 +12,6 @@
 #include <linux/version.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Assistant");
 MODULE_DESCRIPTION("Long-press (hold) detection using threaded IRQ, log emergency to file");
 MODULE_VERSION("1.0");
 
