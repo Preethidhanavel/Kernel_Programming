@@ -8,7 +8,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Keyboard double-press detector using tasklet");
-MODULE_VERSION("1.0");
+
 
 #define KBD_DATA_REG        0x60
 #define KBD_SCANCODE_MASK   0x7F

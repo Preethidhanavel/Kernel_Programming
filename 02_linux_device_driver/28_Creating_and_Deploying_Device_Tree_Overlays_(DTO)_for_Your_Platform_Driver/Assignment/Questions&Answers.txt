@@ -1,0 +1,41 @@
+1.What file format is .dtbo?
+.dtbo is a compiled Device Tree Overlay file.
+It is a binary format generated from a .dts source file.
+It is used to dynamically modify or extend the base device tree at runtime.
+It allows hardware configuration without rebuilding the kernel.
+
+
+
+
+2.What's the purpose of __overlay__?
+overlay is used inside a .dts overlay to specify which nodes or properties will be added or modified in the base device tree.
+It tells the kernel that this section should be merged on top of an existing node.
+It enables flexible hardware configuration.
+It helps avoid changing the base device tree file directly.
+
+
+
+
+3.Why must compatible match exactly?
+The compatible string identifies which driver should bind to the device.
+If the string does not match exactly, the kernel will not find a matching driver.
+The device will not be initialized properly.
+Accurate matching ensures the correct driver is loaded.
+
+
+
+
+4.What's the result of incorrect GPIO numbers?
+Incorrect GPIO numbers cause the driver to access the wrong hardware pins.
+This leads to failures like buttons not working or LEDs not lighting.
+It can also cause unintended hardware behavior.
+Debugging becomes harder due to mismatched pin configurations.
+
+
+
+
+5.Can multiple DTOs be loaded simultaneously?
+Yes, multiple Device Tree Overlays can be loaded at the same time.
+Each overlay modifies different or compatible parts of the device tree.
+Care must be taken to avoid conflicts in nodes and resources.
+This allows modular and flexible hardware configuration.

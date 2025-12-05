@@ -1,0 +1,41 @@
+1.What does dev_pm_ops do?
+dev_pm_ops defines power management callbacks for a driver.
+It allows the kernel to call suspend() and resume() during system sleep or wake-up.
+It helps save and restore device state.
+It is registered through the driver structure for power management integration.
+
+
+
+
+2.What happens if you forget to enable_irq() on resume?
+The device will not receive interrupts after resume.
+Events like button presses or data ready signals will be lost.
+The driver may appear "stuck" or unresponsive.
+Manual re-enabling is needed to restore normal operation.
+
+
+
+
+3.Can you call gpiod_get() inside resume()?
+It is not recommended to call gpiod_get() in resume().
+GPIO resources should be acquired during probe, not during resume.
+Calling it in resume can lead to errors or resource conflicts.
+Resume should only restore state, not allocate or request resources.
+
+
+
+
+4.Should you allocate memory in suspend()?
+No, allocating memory in suspend is not safe or useful.
+Suspend should focus on saving state and reducing activity.
+Memory allocation can fail due to low system resources during suspend.
+All allocations should be done earlier during probe or init.
+
+
+
+
+5.What's the safest place to restore LED state?
+The safest place is inside the resume() callback.
+Resume runs when the device wakes up from low power.
+Restoring LED state here ensures it matches the pre-suspend state.
+It avoids race conditions and ensures proper device behavior.

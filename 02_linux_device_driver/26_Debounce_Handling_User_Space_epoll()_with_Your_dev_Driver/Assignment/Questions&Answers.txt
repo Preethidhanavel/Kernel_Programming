@@ -1,0 +1,37 @@
+1. What problem does debounce fix?
+ Debounce removes false triggers caused by mechanical switch noise.
+ When a physical button is pressed, it bounces rapidly, generating multiple signals.
+ Debouncing ensures only one stable event is registered.
+ It improves reliability of input event handling.
+
+
+
+2. What unit is jiffies in?
+ jiffies is measured in kernel ticks, not in standard time units.
+ The number of ticks per second is defined by HZ (e.g., 250 or 1000).
+ Actual time in seconds can be calculated by jiffies / HZ.
+ It's commonly used for timeouts and delays in the kernel.
+
+
+
+3. How does epoll() differ from poll()?
+ epoll() is more efficient for handling a large number of file descriptors.
+ poll() scans all descriptors every time, making it O(n).
+ epoll() uses an event-driven model, making it O(1) per event.
+ epoll() supports edge-triggered mode for fewer wakeups.
+
+
+
+4. Why do we use O_NONBLOCK with epoll?
+ O_NONBLOCK ensures read/write calls don't block the process.
+ It allows the application to continue running while waiting for events.
+ epoll_wait() notifies when data is ready, avoiding blocking I/O.
+ This makes the system more responsive and scalable.
+
+
+
+5. Can you combine /dev/ttyS0 and /dev/gpiobtn in one epoll_wait()?
+ Yes, epoll can monitor multiple file descriptors together.
+ You can add both device fds to the same epoll instance.
+ epoll_wait() will wake up if any of them has an event.
+ This allows unified handling of different input sources.

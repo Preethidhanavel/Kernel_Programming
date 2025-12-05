@@ -8,10 +8,8 @@
 #include <linux/types.h>
 #include <linux/printk.h>
 
-MODULE_AUTHOR("Your Name");
-MODULE_DESCRIPTION("RCU + seqlock example with debug prints");
+
 MODULE_LICENSE("GPL");
-MODULE_VERSION("0.2");
 
 struct client {
     int id;

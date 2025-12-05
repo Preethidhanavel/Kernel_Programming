@@ -12,8 +12,8 @@
 #include <linux/version.h>
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("Long-press (hold) detection using threaded IRQ, log emergency to file");
-MODULE_VERSION("1.0");
+MODULE_DESCRIPTION("Long-press (hold) detection using threaded IRQ");
+
 
 /* Module parameters */
 static unsigned int long_press_ms = 2000;   /* hold threshold in milliseconds */
